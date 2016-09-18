@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
-import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -54,10 +53,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         String textToAdd = textField.getText().toString();
                         items.remove(index);
-                        writeItems();
-//                      final String itemText = text;
-                        itemsAdapter.add(textToAdd);
-//                        items.toArray()[index] = replacementField;
+                        itemsAdapter.insert(textToAdd, index);
                         writeItems();
                         itemsAdapter.notifyDataSetChanged();
                         dialog.cancel();
