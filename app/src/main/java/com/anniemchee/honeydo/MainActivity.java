@@ -41,19 +41,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showEditDialog(int pos) {
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogLayout = inflater.inflate(R.layout.modify_dialog, null);
         final int index = pos;
         String itemName = (String) items.toArray()[index];
-        final EditText textField = (EditText)findViewById(R.id.itemToEdit);
+        View modDialog = LayoutInflater.from(this).inflate(R.layout.modify_dialog, null);
+        final EditText textField = (EditText) modDialog.findViewById(R.id.itemToEdit);
 
         AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.addDialog))
-
+                .setView(R.layout.modify_dialog)
                 .setTitle("Modify " + '"' + itemName + '"')
-                .setView(dialogLayout)
                 .setPositiveButton("Done Editing", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+//                        final EditText textField = (EditText) findViewById(R.id.itemToEdit);
                         //this is throwing a NPE
                         String text = textField.getText().toString();
                         items.remove(index);
