@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -45,20 +46,17 @@ public class MainActivity extends AppCompatActivity {
         String itemName = (String) items.toArray()[index];
         View modDialog = LayoutInflater.from(this).inflate(R.layout.modify_dialog, null);
         final EditText textField = (EditText) modDialog.findViewById(R.id.itemToEdit);
-
         AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.addDialog))
-                .setView(R.layout.modify_dialog)
+                .setView(modDialog)
                 .setTitle("Modify " + '"' + itemName + '"')
                 .setPositiveButton("Done Editing", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-//                        final EditText textField = (EditText) findViewById(R.id.itemToEdit);
-                        //this is throwing a NPE
-                        String text = textField.getText().toString();
+                        String textToAdd = textField.getText().toString();
                         items.remove(index);
                         writeItems();
 //                      final String itemText = text;
-                        itemsAdapter.add(text);
+                        itemsAdapter.add(textToAdd);
 //                        items.toArray()[index] = replacementField;
                         writeItems();
                         itemsAdapter.notifyDataSetChanged();
