@@ -1,22 +1,40 @@
 package com.anniemchee.honeydo;
 
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.input.CharSequenceInputStream;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
     ArrayList<String> items;
@@ -27,15 +45,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        lvItems = (ListView)findViewById(R.id.lvItems);
+        lvItems = (ListView) findViewById(R.id.lvItems);
         readItems();
         itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
         lvItems.setAdapter(itemsAdapter);
         setupViewListener();
+
+        Button startBtn = (Button) findViewById(R.id.sendEmail);
+        assert startBtn != null;
+        startBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                setupEmailClient(items);
+            }
+        });
     }
 
     public void onAddItem(View v) {
-        EditText etNewItem = (EditText)findViewById(R.id.etNewItem);
+        EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
         String itemText = etNewItem.getText().toString();
         showAddDialog(itemText);
     }
@@ -47,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
         final EditText textField = (EditText) modDialog.findViewById(R.id.itemToEdit);
         textField.setText(itemName);
         textField.setSelection(textField.getText().length());
+
+        //populate dialog with proper view and click handlers for editing or deleting
         AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.addDialog))
                 .setView(modDialog)
                 .setTitle("Modify " + '"' + itemName + '"')
@@ -61,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                         dialog.cancel();
                     }
                 })
-                .setNegativeButton("Delete Forever", new DialogInterface.OnClickListener(){
+                .setNegativeButton("Delete Forever", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         items.remove(index);
@@ -74,9 +102,33 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    public void setupEmailClient(ArrayList list) {
+        //setup current date
+        DateFormat toFormat = new SimpleDateFormat("MM/dd", Locale.US);
+        Date date = new Date();
+        String currentDate = toFormat.format(date);
+
+        //format current list
+        String formattedList = TextUtils.join("\n", list);
+
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("text/plain");
+        i.putExtra("address", "555-555-5555");
+        i.putExtra("sms_body", "Honeydo list for " + currentDate + ":\n" + formattedList);
+        try {
+            startActivity(Intent.createChooser(i, "Sending mail"));
+            finish();
+        }
+        catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(MainActivity.this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public void showAddDialog(String text) {
-        final EditText etNewItem = (EditText)findViewById(R.id.etNewItem);
+        final EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
         final String itemText = text;
+
+        //populate dialog with proper view and click handlers for adding or dismissing
         AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.addDialog))
                 .setTitle("Adding item:")
                 .setMessage(text)
@@ -89,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                         dialog.cancel();
                     }
                 })
-                .setNegativeButton("Nevermind", new DialogInterface.OnClickListener(){
+                .setNegativeButton("Nevermind", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         etNewItem.setText("");
@@ -103,12 +155,12 @@ public class MainActivity extends AppCompatActivity {
     public void setupViewListener() {
         lvItems.setOnItemLongClickListener(
                 new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapter, View item, int pos, long id) {
-                showEditDialog(pos);
-                return false;
-            }
-        });
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> adapter, View item, int pos, long id) {
+                        showEditDialog(pos);
+                        return false;
+                    }
+                });
     }
 
     public void readItems() {

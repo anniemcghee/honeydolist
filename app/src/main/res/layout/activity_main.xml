@@ -40,5 +40,11 @@
         android:layout_alignRight="@+id/btnAddItem"
         android:layout_alignEnd="@+id/btnAddItem" />
 
+    <Button
+        android:id="@+id/sendEmail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Send to Honey"/>
+
 </RelativeLayout>
 
