@@ -19,12 +19,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
-
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.input.CharSequenceInputStream;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         assert startBtn != null;
         startBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                setupEmailClient(items);
+                setupTextClient(items);
             }
         });
     }
@@ -102,28 +97,6 @@ public class MainActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public void setupEmailClient(ArrayList list) {
-        //setup current date
-        DateFormat toFormat = new SimpleDateFormat("MM/dd", Locale.US);
-        Date date = new Date();
-        String currentDate = toFormat.format(date);
-
-        //format current list
-        String formattedList = TextUtils.join("\n", list);
-
-        Intent i = new Intent(Intent.ACTION_SEND);
-        i.setType("text/plain");
-        i.putExtra("address", "555-555-5555");
-        i.putExtra("sms_body", "Honeydo list for " + currentDate + ":\n" + formattedList);
-        try {
-            startActivity(Intent.createChooser(i, "Sending mail"));
-            finish();
-        }
-        catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(MainActivity.this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     public void showAddDialog(String text) {
         final EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
         final String itemText = text;
@@ -150,6 +123,29 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .create();
         dialog.show();
+    }
+
+    public void setupTextClient(ArrayList list) {
+        //setup current date
+        DateFormat toFormat = new SimpleDateFormat("MM/dd", Locale.US);
+        Date date = new Date();
+        String currentDate = toFormat.format(date);
+
+        //format current list
+        String formattedList = TextUtils.join("\n", list);
+
+        //open client and prepare text to be sent
+        Intent textIntent = new Intent(Intent.ACTION_SEND);
+        textIntent.setType("text/plain");
+        textIntent.putExtra("address", "555-555-5555");
+        textIntent.putExtra("sms_body", "Honeydo list for " + currentDate + ":\n" + formattedList);
+        try {
+            startActivity(Intent.createChooser(textIntent, "Sending text"));
+            finish();
+        }
+        catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(MainActivity.this, "No messaging client.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void setupViewListener() {
