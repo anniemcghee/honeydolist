@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         String itemName = (String) items.toArray()[index];
         View modDialog = LayoutInflater.from(this).inflate(R.layout.modify_dialog, null);
         final EditText textField = (EditText) modDialog.findViewById(R.id.itemToEdit);
+        textField.setText(itemName);
+        textField.setSelection(textField.getText().length());
         AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.addDialog))
                 .setView(modDialog)
                 .setTitle("Modify " + '"' + itemName + '"')
