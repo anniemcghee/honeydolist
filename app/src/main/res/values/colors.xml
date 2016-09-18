@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#90309f</color>
+    <color name="colorPrimaryDark">#58309f</color>
+    <color name="colorAccent">#ff40e1</color>
+    <color name="cancelRed">#c0392b</color>
+</resources>
