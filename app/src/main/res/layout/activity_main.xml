@@ -33,18 +33,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/lvItems"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/btnAddItem"
         android:layout_alignRight="@+id/btnAddItem"
-        android:layout_alignEnd="@+id/btnAddItem" />
+        android:layout_alignEnd="@+id/btnAddItem"
+        android:layout_above="@+id/btnAddItem"
+        android:layout_below="@+id/sendEmail" />
 
     <Button
         android:id="@+id/sendEmail"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Send to Honey"/>
+        android:text="Send to Honey"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>
 
