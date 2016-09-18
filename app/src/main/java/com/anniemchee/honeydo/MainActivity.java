@@ -1,4 +1,4 @@
-package com.anniemcghee.honeydo;
+package com.anniemchee.honeydo;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -11,9 +11,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-
-import com.anniemchee.honeydo.R;
-import com.anniemchee.honeydo.Splash;
 
 import org.apache.commons.io.FileUtils;
 
@@ -29,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new Splash();
         setContentView(R.layout.activity_main);
         lvItems = (ListView)findViewById(R.id.lvItems);
         readItems();
@@ -46,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void showEditDialog(int pos) {
         LayoutInflater inflater = getLayoutInflater();
-        View dialogLayout = inflater.inflate(R.layout.modify_dialog_root, null); //this is the NPE i think
+        View dialogLayout = inflater.inflate(R.layout.modify_dialog, null);
         final int index = pos;
         String itemName = (String) items.toArray()[index];
         final EditText textField = (EditText)findViewById(R.id.itemToEdit);

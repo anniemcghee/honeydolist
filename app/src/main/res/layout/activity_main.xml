@@ -41,6 +41,3 @@
         android:layout_alignEnd="@+id/btnAddItem" />
 
 </RelativeLayout>
-
-
-
