@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
         //open client and prepare text to be sent
         Intent textIntent = new Intent(Intent.ACTION_SEND);
         textIntent.setType("text/plain");
-        textIntent.putExtra("address", "555-555-5555");
+        textIntent.putExtra("address", "304-555-5555");
         textIntent.putExtra("sms_body", "Honeydo list for " + currentDate + ":\n" + formattedList);
         try {
             startActivity(Intent.createChooser(textIntent, "Sending text"));
