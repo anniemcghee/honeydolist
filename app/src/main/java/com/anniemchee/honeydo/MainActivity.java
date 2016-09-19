@@ -41,9 +41,9 @@ public class MainActivity extends AppCompatActivity {
         lvItems.setAdapter(itemsAdapter);
         setupViewListener();
 
-        Button startBtn = (Button) findViewById(R.id.sendEmail);
-        assert startBtn != null;
-        startBtn.setOnClickListener(new View.OnClickListener() {
+        Button sendButton = (Button) findViewById(R.id.sendEmail);
+        assert sendButton != null;
+        sendButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 setupTextClient(items);
             }
@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     public void showEditDialog(int pos) {
         final int index = pos;
         String itemName = (String) items.toArray()[index];
+
         View modDialog = LayoutInflater.from(this).inflate(R.layout.modify_dialog, null);
         final EditText textField = (EditText) modDialog.findViewById(R.id.itemToEdit);
         textField.setText(itemName);
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.addDialog))
                 .setView(modDialog)
                 .setTitle("Modify " + '"' + itemName + '"')
+                //setup edit and insert at proper index
                 .setPositiveButton("Done Editing", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -79,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
                         dialog.cancel();
                     }
                 })
+                //setup delete
                 .setNegativeButton("Delete Forever", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -132,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         //open client and prepare text to be sent
         Intent textIntent = new Intent(Intent.ACTION_SEND);
         textIntent.setType("text/plain");
-        textIntent.putExtra("address", "304-555-5555");
+        textIntent.putExtra("address", "304-549-5555");
         textIntent.putExtra("sms_body", "Honeydo list for " + currentDate + ":\n" + formattedList);
         try {
             startActivity(Intent.createChooser(textIntent, "Sending text"));
